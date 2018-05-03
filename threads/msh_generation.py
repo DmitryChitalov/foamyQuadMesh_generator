@@ -30,7 +30,6 @@ class msh_generation_thread(QtCore.QThread):
 		MeshDict_file = prj_path_val_th + '/' + msh_t + "Dict"
 		if os.path.exists(MeshDict_file) == True:
 			if msh_t == 'blockMesh':
-				
 				msh_bash_file = open(prj_path_val_th + '/' + mesh_name_txt_val_th + '_' + msh_t + '/' + 'mesh_script', 'w')
 				msh_bash_file.write('#!/bin/sh' + '\n' + '. /opt/openfoam4/etc/bashrc' + '\n' + msh_t + '\n' + 'exit')
 				msh_bash_file.close()
@@ -38,7 +37,11 @@ class msh_generation_thread(QtCore.QThread):
 				msh_bash_file = open(prj_path_val_th + '/' + mesh_name_txt_val_th + '_' + msh_t + '/' + 'mesh_script', 'w')
 				msh_bash_file.write('#!/bin/sh' + '\n' + '. /opt/openfoam4/etc/bashrc' + '\n' + 'blockMesh' + '\n' + 'surfaceFeatureExtract' + '\n' + msh_t + '\n' + 'exit')
 				msh_bash_file.close()
-
+			elif msh_t == 'foamyQuadMesh':
+				msh_bash_file = open(prj_path_val_th + '/' + mesh_name_txt_val_th + '_' + msh_t + '/' + 'mesh_script', 'w')
+				msh_bash_file.write('#!/bin/sh' + '\n' + '. /opt/openfoam4/etc/bashrc' + '\n' + 'surfaceFeatureExtract' + '\n' + msh_t + '\n' + 'extrude2DMesh MeshedSurface' + '\n' + 'exit')
+				msh_bash_file.close()
+				
 			msh_out_file = open(prj_path_val_th + '/' + mesh_name_txt_val_th + '_' + msh_t + '/' + 'mesh_out.log', "w")
 			msh_run_subprocess = subprocess.Popen(["bash " + prj_path_val_th + '/' + mesh_name_txt_val_th + '_' + msh_t + "/" + "mesh_script"], cwd = pp_dir_th, shell=True, stdout=msh_out_file, stderr=msh_out_file)
 			msh_out_file.close()

@@ -12,9 +12,9 @@ from windows.lng_window import lng_form_class
 
 from threads.msh_generation import msh_generation_thread
 from threads.msh_visualisation import msh_visualisation_thread
-from functions.bM_functions import bM_functions_class
+from functions.msh_functions import msh_functions_class
 
-###-------------------------Главное окно программы-----------------------------###
+###---------------------------Главное окно программы------------------------------###
 
 class MainWindowClass(QtGui.QMainWindow):
     def __init__(self, parent=None):

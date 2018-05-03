@@ -10,6 +10,7 @@ import os.path
 
 from windows.bMD_window import bmd_window_class
 from windows.sHMD_window import shmd_window_class
+from windows.fQMD_window import fqmd_window_class
 
 # ---------------------------Главная форма проекта-------------------------------#
 		
@@ -55,12 +56,10 @@ class prj_form_class(QtGui.QWidget):
 # -------------------------------------Второй блок формы------------------------------------#
 
 		self.mesh_type_label = QtGui.QLabel()
-		self.bm = QtGui.QRadioButton("blockMesh")
-		self.bm.setChecked(True)
-		self.shm = QtGui.QRadioButton("snappyHexMesh")
+		self.fqm = QtGui.QRadioButton("foamyQuadMesh")
+		self.fqm.setChecked(True)
 		self.mesh_type_vbox = QtGui.QVBoxLayout()
-		self.mesh_type_vbox.addWidget(self.bm)
-		self.mesh_type_vbox.addWidget(self.shm)
+		self.mesh_type_vbox.addWidget(self.fqm)
 		
 		self.mesh_label = QtGui.QLabel()
 		self.mesh_name = QtGui.QLineEdit()
@@ -166,7 +165,7 @@ class prj_form_class(QtGui.QWidget):
 		self.chc_button.setEnabled(True)
 		self.prj_path_name.setText('')
 			
-	# .....Функция, запускаемая при нажатии кнопки выбора директории сохранения нового проекта"......#
+	#.....Функция, запускаемая при нажатии кнопки выбора директории сохранения нового проекта"......#
 
 	def on_prj_choose(self):
 		global prj_path
@@ -174,18 +173,12 @@ class prj_form_class(QtGui.QWidget):
 		prj_path = QtGui.QFileDialog.getExistingDirectory(directory=QtCore.QDir.currentPath())
 		prj_dir, prj_sys = os.path.split(prj_path)
 		
-		if self.bm.isChecked() == True:
-			pckls_path = prj_path + '/' + self.mesh_name.text() + '_blockMesh' + '/'
-			pd_2 = 'blockMesh'
-		elif self.shm.isChecked() == True:
-			pckls_path = prj_path + '/' + self.mesh_name.text() + '_snappyHexMesh' + '/'
-			pd_2 = 'snappyHexMesh'
+		if self.fqm.isChecked() == True:
+			pckls_path = prj_path + '/' + self.mesh_name.text() + '_foamyQuadMesh' + '/'
+			pd_2 = 'foamyQuadMesh'
 			
-		if pd_2 == 'blockMesh':
-			self.bm.setChecked(True)
-			par.on_mesh_type_get(pd_2)
-		elif pd_2 == 'snappyHexMesh':
-			self.shm.setChecked(True)
+		if pd_2 == 'foamyQuadMesh':
+			self.fqm.setChecked(True)
 			par.on_mesh_type_get(pd_2)
 		
 		if prj_sys == 'system':
@@ -200,7 +193,7 @@ class prj_form_class(QtGui.QWidget):
 				dialog = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Attention!", "The destination directory should be called system", buttons = QtGui.QMessageBox.Ok)
 			result = dialog.exec_()
 			
-	# .....Функция, запускаемая при нажатии кнопки "выбрать имеющийся проект"......#
+	#.....Функция, запускаемая при нажатии кнопки "выбрать имеющийся проект".....#
 		
 	def on_chc_clicked(self):
 		global prj_path
@@ -217,16 +210,13 @@ class prj_form_class(QtGui.QWidget):
 			self.prj_path_name.setText(prj_dir)
 			self.save_button.setEnabled(True)
 			self.mesh_name.setText(pd_1)
-			if pd_2 == 'blockMesh':
-				self.bm.setChecked(True)
-				par.on_mesh_type_get(pd_2)
-			elif pd_2 == 'snappyHexMesh':
-				self.shm.setChecked(True)
+			
+			if pd_2 == 'foamyQuadMesh':
+				self.fqm.setChecked(True)
 				par.on_mesh_type_get(pd_2)
 				
 			self.mesh_type_label.setEnabled(False)
-			self.bm.setEnabled(False)
-			self.shm.setEnabled(False)
+			self.fqm.setEnabled(False)
 				
 			self.prj_frame.setEnabled(True)
 			self.prj_path_name.setEnabled(False)
@@ -278,15 +268,11 @@ class prj_form_class(QtGui.QWidget):
 		ldw_label.setStyleSheet("border-style: none;" "font-size: 10pt;")
 		par.ldw_grid.addWidget(ldw_label, 0, 0)
 		par.ldw.setTitleBarWidget(par.ldw_frame)
-		if pd_2 == 'blockMesh':
-			bmd_form = bmd_window_class(self, par)
-			par.ldw.setWidget(bmd_form)
-			att_msg = 'blockMeshDict'
-				
-		elif pd_2 == 'snappyHexMesh':
-			shmd_form = shmd_window_class(self, par)
-			par.ldw.setWidget(shmd_form)
-			att_msg = 'snappyHexMeshDict'
+			
+		if pd_2 == 'foamyQuadMesh':
+			fqmd_form = fqmd_window_class(self, par)
+			par.ldw.setWidget(fqmd_form)
+			att_msg = 'foamyQuadMeshDict'
 		
 		if self.cf_radio.isChecked() == True:
 			if int_lng == 'Russian':
